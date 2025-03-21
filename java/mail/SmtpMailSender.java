@@ -2,6 +2,7 @@ package java.mail;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 
 import jakarta.mail.Message;
@@ -11,7 +12,6 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
-
 public class SmtpMailSender {
     public static void main(String[] args) {
         // sendmail 서버 정보
@@ -19,18 +19,18 @@ public class SmtpMailSender {
         String smtpPort = "25";
 
         // 보내는 사람
-        String from = ""; 
+        String from = "";
 
         // 받는 사람 리스트 (TO)
-        String[] recipientsTO = {"", "", ""};
+        List<String> recipientsTO = readRecipientsFromFile("recipients/to.txt");
         String to = String.join(",", recipientsTO);
 
         // 참조 리스트 (CC)
-        String[] recipientsCC = {"", "", ""};
+        List<String> recipientsCC = readRecipientsFromFile("recipients/cc.txt");
         String cc = String.join(",", recipientsCC);
 
         // 숨은 참조 리스트 (BCC)
-        String[] recipientsBCC = {"", "", ""};
+        List<String> recipientsBCC = readRecipientsFromFile("recipients/bcc.txt");
         String bcc = String.join(",", recipientsBCC);
 
         // 이메일 형식 선택 (true: HTML, false: 텍스트)
@@ -50,21 +50,18 @@ public class SmtpMailSender {
 
             // 받는 사람 (TO)
             message.setRecipients(
-                Message.RecipientType.TO,
-                InternetAddress.parse(to)
-            );
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(to));
 
             // 참조 (CC)
             message.setRecipients(
-                Message.RecipientType.CC,
-                InternetAddress.parse(cc)
-            );
+                    Message.RecipientType.CC,
+                    InternetAddress.parse(cc));
 
             // 숨은 참조 (BCC)
             message.setRecipients(
-                Message.RecipientType.BCC,
-                InternetAddress.parse(bcc)
-            );
+                    Message.RecipientType.BCC,
+                    InternetAddress.parse(bcc));
 
             // 메일 제목
             message.setSubject("메일 전송 테스트 2025/03/20");
@@ -85,6 +82,20 @@ public class SmtpMailSender {
 
         } catch (MessagingException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static List<String> readRecipientsFromFile(String filePath) {
+        try {
+            List<String> recipients = Files.readAllLines(Paths.get(filePath));
+            return recipients.stream()
+                    .map(String::trim)
+                    .filter(line -> !line.isEmpty())
+                    .toList();
+        } catch (Exception e) {
+            System.err.println(filePath + " 파일을 읽는 도중 오류가 발생했습니다.");
+            e.printStackTrace();
+            return List.of();
         }
     }
 

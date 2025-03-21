@@ -1,0 +1,3 @@
+bcc1@example.com
+bcc2@example.com
+bcc3@example.com
