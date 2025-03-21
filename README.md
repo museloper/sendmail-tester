@@ -1,18 +1,51 @@
-### 자바 컴파일 및 실행
+### 자바 메일 발송
 
 ```sh
-# 패키지 java.mail 삭제 후 실행
+# java 파일 패키지 java.mail 삭제 후 실행
 
 # 디렉토리 구조(예시)
 /home
   ├── template
   │    └── template.html
+  ├── recipients
+  │    ├── to.txt
+  │    ├── cc.txt
+  │    └── bcc.txt
+  ├── loop_sendmail.sh
+  ├── sendmail.sh
+  ├── SingleRecipientMailSender.java
   ├── SmtpMailSender.java
   ├── jakarta.mail-2.0.1.jar
   ├── jakarta.mail-api-2.0.1.jar
   └── jakarta.activation-2.0.1.jar
+```
 
-# java-cli(예시)
-javac -cp ".:/home/jakarta.mail-2.0.1.jar:/home/jakarta.mail-api-2.0.1.jar:/home/jakarta.activation-2.0.1.jar" SmtpMailSender.java
+<br>
+
+### `java-cli`
+
+```sh
+#!/bin/sh
+# sh sendmail.sh
+
+# 메일 일괄 발송(예시)
+
+rm -rf SmtpMailSender.class &&
+
+javac -cp ".:/home/jakarta.mail-2.0.1.jar:/home/jakarta.mail-api-2.0.1.jar:/home/jakarta.activation-2.0.1.jar" SmtpMailSender.java &&
 java -cp ".:/home/jakarta.mail-2.0.1.jar:/home/jakarta.mail-api-2.0.1.jar:/home/jakarta.activation-2.0.1.jar" SmtpMailSender
+```
+
+<br>
+
+```sh
+#!/bin/sh
+# sh loop_sendmail.sh
+
+# 메일 개별 발송(예시)
+
+rm -rf SingleRecipientMailSender.class &&
+
+javac -cp ".:/home/jakarta.mail-2.0.1.jar:/home/jakarta.mail-api-2.0.1.jar:/home/jakarta.activation-2.0.1.jar" SingleRecipientMailSender.java &&
+java -cp ".:/home/jakarta.mail-2.0.1.jar:/home/jakarta.mail-api-2.0.1.jar:/home/jakarta.activation-2.0.1.jar" SingleRecipientMailSender
 ```
