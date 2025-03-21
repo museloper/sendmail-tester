@@ -21,9 +21,17 @@ public class SmtpMailSender {
         // 보내는 사람
         String from = ""; 
 
-        // 받는 사람 리스트
-        String[] recipients = {"", "", ""};
-        String to = String.join(",", recipients);
+        // 받는 사람 리스트 (TO)
+        String[] recipientsTO = {"", "", ""};
+        String to = String.join(",", recipientsTO);
+
+        // 참조 리스트 (CC)
+        String[] recipientsCC = {"", "", ""};
+        String cc = String.join(",", recipientsCC);
+
+        // 숨은 참조 리스트 (BCC)
+        String[] recipientsBCC = {"", "", ""};
+        String bcc = String.join(",", recipientsBCC);
 
         // 이메일 형식 선택 (true: HTML, false: 텍스트)
         boolean isHtml = true;
@@ -39,9 +47,23 @@ public class SmtpMailSender {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
+
+            // 받는 사람 (TO)
             message.setRecipients(
                 Message.RecipientType.TO,
                 InternetAddress.parse(to)
+            );
+
+            // 참조 (CC)
+            message.setRecipients(
+                Message.RecipientType.CC,
+                InternetAddress.parse(cc)
+            );
+
+            // 숨은 참조 (BCC)
+            message.setRecipients(
+                Message.RecipientType.BCC,
+                InternetAddress.parse(bcc)
             );
 
             // 메일 제목
